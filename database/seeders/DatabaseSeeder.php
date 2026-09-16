@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DeviceStatusSeeder::class);
         $this->call(CountryDatabaseSeeder::class);
         $this->call(CitySeeder::class);
+        $this->call(RbacSeeder::class);
 
     }
 }
-

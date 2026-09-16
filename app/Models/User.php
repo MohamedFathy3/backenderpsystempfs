@@ -192,6 +192,23 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->belongsToMany(Permission::class);
     }
+
+    public function hasRole(string $role): bool
+    {
+        $legacyRole = $this->role instanceof \BackedEnum ? $this->role->value : $this->role;
+        return $legacyRole === $role || $this->roles()->where('name', $role)->exists();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->hasRole('admin') || $this->hasRole('Super Admin')) {
+            return true;
+        }
+
+        return $this->permissions()->where('name', $permission)->exists()
+            || $this->roles()->whereHas('permissions', fn ($query) => $query->where('name', $permission))->exists();
+    }
+
     protected function casts(): array
     {
         return [

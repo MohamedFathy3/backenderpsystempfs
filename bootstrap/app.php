@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\EnsurePermission;
 use App\Http\Middleware\SnakeCaseMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verified' => EnsureEmailIsVerified::class,
+            'permission' => EnsurePermission::class,
         ]);
 
         //

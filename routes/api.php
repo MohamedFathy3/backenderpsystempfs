@@ -102,30 +102,30 @@ Route::get('fetch-department', [DepartmentController::class, 'fetchDepartment'])
 
 //                                            Role
 //////////////////////////////////////////////////////////role//////////////////////////////////////
-Route::post('role/index', [RoleController::class, 'index']);
-Route::post('role/restore', [RoleController::class, 'restore']);
-Route::delete('role/delete', [RoleController::class, 'destroy']);
-Route::delete('role/forceDelete', [RoleController::class, 'forceDelete']);
+Route::post('role/index', [RoleController::class, 'index'])->middleware('permission:roles.view');
+Route::post('role/restore', [RoleController::class, 'restore'])->middleware('permission:roles.update');
+Route::delete('role/delete', [RoleController::class, 'destroy'])->middleware('permission:roles.delete');
+Route::delete('role/forceDelete', [RoleController::class, 'forceDelete'])->middleware('permission:roles.delete');
 Route::get('role/code/next', [RoleController::class, 'nextCode']);
-Route::apiResource('role', RoleController::class);
-Route::get('fetch-role', [RoleController::class, 'fetchRole']);
+Route::apiResource('role', RoleController::class)->middleware('permission:roles.view');
+Route::get('fetch-role', [RoleController::class, 'fetchRole'])->middleware('permission:roles.view');
 
 //////////////////////////////////////////////////////////role///////////////////////////////////////
 
 
 //                                            Permission
 //////////////////////////////////////////////////////////Permission//////////////////////////////////////
-Route::post('permission/index', [PermissionController::class, 'index']);
-Route::post('permission/restore', [PermissionController::class, 'restore']);
-Route::delete('permission/delete', [PermissionController::class, 'destroy']);
-Route::delete('permission/forceDelete', [PermissionController::class, 'forceDelete']);
+Route::post('permission/index', [PermissionController::class, 'index'])->middleware('permission:permissions.view');
+Route::post('permission/restore', [PermissionController::class, 'restore'])->middleware('permission:permissions.update');
+Route::delete('permission/delete', [PermissionController::class, 'destroy'])->middleware('permission:permissions.delete');
+Route::delete('permission/forceDelete', [PermissionController::class, 'forceDelete'])->middleware('permission:permissions.delete');
 Route::get('permission/code/next', [PermissionController::class, 'nextCode']);
-Route::apiResource('permission', PermissionController::class);
-Route::get('fetch-permission', [PermissionController::class, 'fetchPermission']);
+Route::apiResource('permission', PermissionController::class)->middleware('permission:permissions.view');
+Route::get('fetch-permission', [PermissionController::class, 'fetchPermission'])->middleware('permission:permissions.view');
 
-Route::post('/roles/{role}/permissions', [PermissionController::class, 'assignPermissions']);
-Route::post('/users/{user}/roles', [PermissionController::class, 'assignRole']);
-Route::post('/users/{user}/permissions', [PermissionController::class, 'assignPermissionsToUser']);
+Route::post('/roles/{role}/permissions', [PermissionController::class, 'assignPermissions'])->middleware('permission:roles.update');
+Route::post('/users/{user}/roles', [PermissionController::class, 'assignRole'])->middleware('permission:roles.update');
+Route::post('/users/{user}/permissions', [PermissionController::class, 'assignPermissionsToUser'])->middleware('permission:permissions.update');
 //////////////////////////////////////////////////////////Permission///////////////////////////////////////
 
 

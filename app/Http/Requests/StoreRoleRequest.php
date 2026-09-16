@@ -22,7 +22,10 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:roles,name',
+            'name' => 'required|string|max:255|unique:roles,name',
+            'display_name' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'scope' => 'nullable|in:self,department,organization,global',
         ];
     }
 }

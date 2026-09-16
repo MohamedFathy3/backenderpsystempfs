@@ -29,6 +29,9 @@ class UpdateRoleRequest extends FormRequest
                 'max:255',
                 Rule::unique('roles', 'name')->ignore($this->route('role')),
             ],
+            'display_name' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'scope' => 'nullable|in:self,department,organization,global',
         ];
     }
 }

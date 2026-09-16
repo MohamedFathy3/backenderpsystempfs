@@ -11,8 +11,12 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'display_name' => $this->display_name ?? $this->name,
+            'description' => $this->description,
+            'scope' => $this->scope ?? 'organization',
+            'is_system' => (bool) ($this->is_system ?? false),
             'link' => $this->link,
-            'permissions' => $this->permissions,
+            'permissions' => PermissionResource::collection($this->permissions),
         ];
     }
 }
