@@ -18,6 +18,7 @@ class CompanyCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'type' => 'nullable|string|max:255',
             'phone' => 'nullable',
             'address' => 'nullable',
             'email' => 'nullable',
@@ -32,4 +33,3 @@ class CompanyCreateRequest extends FormRequest
         ];
     }
 }
-

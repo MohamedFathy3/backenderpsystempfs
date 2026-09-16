@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
@@ -90,9 +92,9 @@ use Spatie\Activitylog\LogOptions;
  * @property-read \App\Models\DeviceHistory|null $latestDeviceHistory
  * @mixin \Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasFactory, Notifiable, HasApiTokens, Notifiable, LogsActivity;
+    use HasFactory, Notifiable, HasApiTokens, LogsActivity, CanResetPassword;
     use SoftDeletes;
     protected $guarded = ['id'];
 

@@ -20,6 +20,7 @@ class CompanyUpdateRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
+            'type' => 'nullable|string|max:255',
             'phone' => 'nullable',
             'address' => 'nullable',
             'avatar' => ['nullable', 'image', 'max:2048'],

@@ -27,10 +27,10 @@ class CompanyController extends BaseController
         $this->crudRepository = $pattern;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $companies = CompanyResource::collection($this->crudRepository->all());
+            $companies = CompanyResource::collection($this->crudRepository->all(['departments', 'city', 'country', 'organization']));
             return $companies->additional(JsonResponse::success());
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
@@ -102,7 +102,10 @@ class CompanyController extends BaseController
     public function show(Company $company): ?\Illuminate\Http\JsonResponse
     {
         try {
-            return JsonResponse::respondSuccess('Item Fetched Successfully', new CompanyResource($company));
+            return JsonResponse::respondSuccess(
+                'Item Fetched Successfully',
+                new CompanyResource($company->load(['departments', 'city', 'country', 'organization']))
+            );
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
         }
@@ -113,17 +116,33 @@ class CompanyController extends BaseController
         try {
             $data = $request->validated();
             $this->crudRepository->update($data, $company->id);
+            $company->refresh()->load(['departments', 'city', 'country', 'organization']);
             activity()->performedOn($company)->withProperties(['attributes' => $company])->log('update');
-            return JsonResponse::respondSuccess(trans(JsonResponse::MSG_UPDATED_SUCCESSFULLY));
+            return JsonResponse::respondSuccess(
+                trans(JsonResponse::MSG_UPDATED_SUCCESSFULLY),
+                new CompanyResource($company)
+            );
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
         }
     }
 
-    public function destroy(Request $request): ?\Illuminate\Http\JsonResponse
+    public function destroy(Request $request, ?Company $company = null): ?\Illuminate\Http\JsonResponse
     {
         try {
-            $this->crudRepository->deleteRecords('companies', $request['items']);
+            $ids = $request->input('items', []);
+            if ($company?->exists) {
+                $company->forceDelete();
+                return JsonResponse::respondSuccess(trans(JsonResponse::MSG_DELETED_SUCCESSFULLY));
+            }
+            if (!is_array($ids)) {
+                $ids = [$ids];
+            }
+            $ids = array_values(array_filter($ids));
+            if ($ids === []) {
+                return JsonResponse::respondError('No company was selected for deletion', 422);
+            }
+            $this->crudRepository->deleteRecords('companies', $ids);
             return JsonResponse::respondSuccess(trans(JsonResponse::MSG_DELETED_SUCCESSFULLY));
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());

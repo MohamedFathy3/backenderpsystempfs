@@ -39,7 +39,8 @@ class JsonResponse
             $errorLog = collect([
                 'code' => $e->getCode(),
             ])->concat((array)collect($e->getTrace())->take(1))->toArray()[0];
-            Log::channel('slack')->error($e->getMessage(), $errorLog);
+            // Slack is optional; a missing webhook must never turn an API error into a second exception.
+            Log::error($e->getMessage(), $errorLog);
         }
 
         return response()->json([
