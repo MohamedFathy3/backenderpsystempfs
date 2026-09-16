@@ -391,11 +391,6 @@ Route::get('country/code/next', [CountryController::class, 'nextCode']);
 Route::apiResource('country', CountryController::class);
 
 
-Route::post('/country/index', [CountryController::class, 'index']);
-Route::put('/country/{id}/{column}', [CountryController::class, 'toggle']);
-Route::apiResource('country', CountryController::class);
-
-
 
 
 Route::post('/city/index', [CityController::class, 'index']);
