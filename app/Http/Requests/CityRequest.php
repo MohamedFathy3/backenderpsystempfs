@@ -17,13 +17,12 @@ class CityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:255|unique:cities,name',
-            'country_id' => 'sometimes|exists:countries,id',
+            'name' => 'required|string|max:255|unique:cities,name,NULL,id,country_id,' . $this->input('country_id'),
+            'country_id' => 'required|exists:countries,id',
             'Locode' => 'nullable|string|size:5|unique:cities,Locode',
             'port_types' => 'nullable|array',
             'port_types.*' => 'in:Ocean,Air,Inland',
-            'code' => 'nullable|string|max:255|unique:cities,code' ,
+            'code' => 'nullable|string|max:255|unique:cities,code',
         ];
     }
 }
-

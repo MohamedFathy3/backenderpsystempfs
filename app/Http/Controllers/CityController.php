@@ -64,7 +64,7 @@ class CityController extends BaseController
     public function update(UpdateCityRequest $request, City $city)
     {
         try {
-            $data = $request->only(['name', 'country_id',  'Locode','port_types']);
+            $data = $request->only(['name', 'country_id', 'Locode', 'code', 'port_types', 'active']);
 
             $city->update($data);
 

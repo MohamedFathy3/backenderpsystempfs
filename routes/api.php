@@ -388,6 +388,9 @@ Route::post('/autocomplete', [UserController::class, 'autoComplete']);
 Route::post('/country/index', [CountryController::class, 'index']);
 Route::put('/country/{id}/{column}', [CountryController::class, 'toggle']);
 Route::get('country/code/next', [CountryController::class, 'nextCode']);
+Route::post('country/restore', [CountryController::class, 'restore']);
+Route::delete('country/delete', [CountryController::class, 'destroy']);
+Route::delete('country/forceDelete', [CountryController::class, 'forceDelete']);
 Route::apiResource('country', CountryController::class);
 
 
