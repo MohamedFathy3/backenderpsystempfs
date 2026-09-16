@@ -5,6 +5,7 @@ namespace App\Http\Controllers\IT;
 use App\Http\Controllers\BaseController;
 
 use App\Http\Requests\IT\ReplyRequest;
+use App\Http\Resources\IT\ReplyResource;
 use App\Interfaces\ReplyRepositoryInterface;
 use App\Traits\HttpResponses;
 use App\Helpers\JsonResponse;
@@ -29,12 +30,10 @@ class ReplyController extends BaseController
             $reply = $this->crudRepository->create($request->validated());
             DB::table('replies')->where('id', $reply->id)->update(['user_id' => Auth::user()->id]);
 
-            $reply =  DB::table('replies')->get(); 
-
             return response()->json([
                 'status' => true,
                 'message' => trans(JsonResponse::MSG_ADDED_SUCCESSFULLY),
-                'data' => $reply,
+                'data' => new ReplyResource($reply->fresh(['user'])),
             ]);
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
