@@ -115,6 +115,11 @@ class Ticket extends BaseModel
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(Type::class, 'type_id');
+    }
+
 
     public function createdBy(): BelongsTo
     {

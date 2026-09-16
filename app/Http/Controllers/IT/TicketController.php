@@ -45,6 +45,24 @@ class TicketController extends BaseController
         }
     }
 
+    public function stats(): \Illuminate\Http\JsonResponse
+    {
+        $user = auth()->user();
+        $role = $user?->role instanceof \BackedEnum ? $user->role->value : $user?->role;
+        $query = Ticket::query();
+        if (!in_array($role, ['admin', 'help_desk'], true)) {
+            $query->where('employee_id', $user->id);
+        }
+
+        return JsonResponse::respondSuccess('Ticket statistics fetched successfully', [
+            'total' => (clone $query)->count(),
+            'open' => (clone $query)->where('status', 'open')->count(),
+            'pending' => (clone $query)->where('status', 'pending')->count(),
+            'closed' => (clone $query)->where('status', 'closed')->count(),
+            'in_progress' => (clone $query)->where('status', 'in_progress')->count(),
+        ]);
+    }
+
     public function store(TicketRequest $request)
     {
         try {

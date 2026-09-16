@@ -45,11 +45,12 @@ class TicketRequest extends FormRequest
             'avatar' => ['nullable', 'image', 'max:2048'],
 
             'category_id' => 'required|exists:categories,id',
+            'type_id' => 'nullable|exists:types,id',
             'employee_id' => 'nullable|exists:users,id',
             'help_desk_id' => 'nullable|exists:users,id',
             'created_by_id' => 'nullable|exists:users,id',
             'device_id' => 'nullable|exists:devices,id',
-            'priority' => 'nullable|string',
+            'priority' => 'nullable|in:low,medium,high,urgent',
             'rating' => 'nullable|integer',
 
         ];

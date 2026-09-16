@@ -266,6 +266,7 @@ Route::group(['middleware' => ['auth:sanctum']], static fn(): array => [
     Route::delete('ticket/delete', [TicketController::class, 'destroy']),
     Route::get('ticket/code/next', [TicketController::class, 'nextCode']),
     Route::delete('ticket/forceDelete', [TicketController::class, 'forceDelete']),
+    Route::get('ticket/stats', [TicketController::class, 'stats']),
     Route::apiResource('ticket', TicketController::class),
     Route::patch('ticket/{ticket}/status', [TicketController::class, 'updateStatus']),
     Route::post('ticket/create-by-employee', [TicketController::class, 'createByEmployee']),
@@ -293,10 +294,12 @@ Route::group(['middleware' => ['auth:sanctum']], static fn(): array => [
 ]);
 // Route::post('tickets/report/pdf', [ReportController::class, 'ticketsReportPDF']);
 
-Route::get('fetch-user', [DeviceController::class, 'fetchUser']);
-Route::get('fetch-device', [DeviceController::class, 'fetchDevice']);
-Route::post('fetch-user-device', [DeviceController::class, 'fetchDeviceData']);
-Route::post('fetch-tickets/status', [UserController::class, 'fetchTicketStatus']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('fetch-user', [DeviceController::class, 'fetchUser']);
+    Route::get('fetch-device', [DeviceController::class, 'fetchDevice']);
+    Route::post('fetch-user-device', [DeviceController::class, 'fetchDeviceData']);
+    Route::post('fetch-tickets/status', [UserController::class, 'fetchTicketStatus']);
+});
 
 //////////////////////////////////////////////////////////department//////////////////////////////////////
 Route::post('type/index', [TypeController::class, 'index']);
