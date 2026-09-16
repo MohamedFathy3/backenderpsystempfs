@@ -24,15 +24,14 @@ class BranchResource extends JsonResource
             'notes' => $this->notes ?? null,
             'active' => $this->active ?? null,
             'company_id' => $this->company_id ?? null,
-            'company' => $this->company->name ?? null,
-            'cityName' => $this->city->name ?? null,
-            'cityId' => $this->city->id ?? null,
+            'company' => $this->company?->name,
+            'cityName' => $this->city?->name,
+            'cityId' => $this->city?->id,
             'city' => $this->city ?? null,
-            'countryId' => $this->country->id ?? null,
-            'countryName' => $this->country->name ?? null,
-            'country' => $this->country->name ?? null,
+            'countryId' => $this->country?->id,
+            'countryName' => $this->country?->name,
+            'country' => $this->country?->name,
             'phone_key_id' => $this->phone_key_id ?? null,
         ];
     }
 }
-

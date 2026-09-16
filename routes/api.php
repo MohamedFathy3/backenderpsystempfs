@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth:sanctum']], static fn(): array => [
 
 
 //////////////////////////////////////////////////////////admin//////////////////////////////////////
+Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('user/index', [UserController::class, 'index']);
 Route::post('user/create-many', [UserController::class, 'createMany']);
 Route::put('/user/{id}/{column}', [UserController::class, 'toggle']);
@@ -415,3 +416,4 @@ Route::delete('branch/forceDelete', [BranchController::class, 'forceDelete']);
 Route::put('/branch/{id}/{column}', [BranchController::class, 'toggle']);
 Route::apiResource('branch', BranchController::class);
 Route::get('fetch-branch', [BranchController::class, 'fetchBranch']);
+});

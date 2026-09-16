@@ -108,6 +108,19 @@ class CrudRepository implements ICrudRepository
     {
         $destroyDenied = [];
 
+        if ($ids === null || $ids === '') {
+            $route = request()->route();
+            $ids = collect($route?->parameters() ?? [])
+                ->map(fn ($value) => $value instanceof Model ? $value->getKey() : $value)
+                ->filter(fn ($value) => is_numeric($value))
+                ->values()
+                ->all();
+        }
+        $ids = is_array($ids) ? array_values(array_filter($ids)) : [$ids];
+        if ($ids === []) {
+            return 0;
+        }
+
         if (Schema::hasColumn($tableName, 'deleted_at')) {
             DB::table($tableName)
                 ->whereIn('id', $ids)

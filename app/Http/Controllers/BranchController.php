@@ -26,7 +26,7 @@ class BranchController extends BaseController
     public function index()
     {
         try {
-            $branchs = BranchResource::collection($this->crudRepository->all());
+            $branchs = BranchResource::collection($this->crudRepository->all(['company', 'city', 'country']));
             return $branchs->additional(JsonResponse::success());
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
@@ -46,7 +46,7 @@ class BranchController extends BaseController
     public function show(Branch $branch): ?\Illuminate\Http\JsonResponse
     {
         try {
-            return JsonResponse::respondSuccess('Item Fetched Successfully', new BranchResource($branch));
+            return JsonResponse::respondSuccess('Item Fetched Successfully', new BranchResource($branch->load(['company', 'city', 'country'])));
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
         }
@@ -58,16 +58,28 @@ class BranchController extends BaseController
             $data = $request->validated();
             $this->crudRepository->update($data, $branch->id);
             activity()->performedOn($branch)->withProperties(['attributes' => $branch])->log('update');
-            return JsonResponse::respondSuccess(trans(JsonResponse::MSG_UPDATED_SUCCESSFULLY));
+            return JsonResponse::respondSuccess(
+                trans(JsonResponse::MSG_UPDATED_SUCCESSFULLY),
+                new BranchResource($branch->refresh()->load(['company', 'city', 'country']))
+            );
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
         }
     }
 
-    public function destroy(Request $request): ?\Illuminate\Http\JsonResponse
+    public function destroy(Request $request, ?Branch $branch = null): ?\Illuminate\Http\JsonResponse
     {
         try {
-            $this->crudRepository->deleteRecords('branches', $request['items']);
+            $ids = $request->input('items', []);
+            if ($branch?->exists) {
+                $branch->forceDelete();
+                return JsonResponse::respondSuccess(trans(JsonResponse::MSG_DELETED_SUCCESSFULLY));
+            }
+            $ids = is_array($ids) ? array_values(array_filter($ids)) : [$ids];
+            if ($ids === []) {
+                return JsonResponse::respondError('No branch was selected for deletion', 422);
+            }
+            $this->crudRepository->deleteRecords('branches', $ids);
             return JsonResponse::respondSuccess(trans(JsonResponse::MSG_DELETED_SUCCESSFULLY));
         } catch (Exception $e) {
             return JsonResponse::respondError($e->getMessage());
@@ -108,4 +120,3 @@ class BranchController extends BaseController
         }
     }
 }
-

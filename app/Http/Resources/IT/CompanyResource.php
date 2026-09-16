@@ -28,14 +28,13 @@ class CompanyResource extends JsonResource
             'type' => $this->type,
             'cityId' => $this->city_id ?? null,
             'countryId' => $this->country_id ?? null,
-            'city' => $this->city->name ?? null,
-            'country' => $this->country->name ?? null,
+            'city' => $this->city?->name,
+            'country' => $this->country?->name,
             'organizationId' => $this->organization_id ?? null,
-            'organization' => new OrganizationResource($this->organization) ?? null,
+            'organization' => $this->organization ? new OrganizationResource($this->organization) : null,
             'departments' => DepartmentResource::collection($this->whenLoaded('departments')),
         ];
     }
 }
-
 
 

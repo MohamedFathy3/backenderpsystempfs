@@ -25,10 +25,10 @@ class CompanyCreateRequest extends FormRequest
             'company_type' => 'nullable',
             'avatar' => ['nullable', 'image', 'max:2048'],
             'website' => 'nullable',
-            'phone_key_id' => 'nullable',
-            'organization_id' => 'nullable',
-            'city_id' => 'nullable',
-            'country_id' => 'nullable',
+            'phone_key_id' => 'nullable|integer|exists:countries,id',
+            'organization_id' => 'nullable|integer|exists:organizations,id',
+            'city_id' => 'nullable|integer|exists:cities,id',
+            'country_id' => 'nullable|integer|exists:countries,id',
             'code' => 'nullable|string|max:255|unique:companies,code',
         ];
     }

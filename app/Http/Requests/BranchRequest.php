@@ -35,11 +35,10 @@ class BranchRequest extends FormRequest
             'branche_type' => 'nullable|string',
             'notes' => 'nullable|string',
             'active' => 'nullable|boolean',
-            'company_id' => 'nullable',
-            'city_id' => 'nullable',
-            'country_id' => 'nullable',
-            'phone_key_id' => 'nullable',
+            'company_id' => 'required|integer|exists:companies,id',
+            'city_id' => 'nullable|integer|exists:cities,id',
+            'country_id' => 'nullable|integer|exists:countries,id',
+            'phone_key_id' => 'nullable|integer|exists:countries,id',
         ];
     }
 }
-
